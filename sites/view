@@ -1,0 +1,34 @@
+server {
+    listen 8080;
+    # Proxy and upgrade WebSocket connection
+    location /ws {
+        proxy_pass      http://127.0.0.1:8083/ws;
+        proxy_http_version  1.1;
+        proxy_set_header    Upgrade $http_upgrade;
+        proxy_set_header    Connection "upgrade";
+        proxy_set_header    Host $host;
+        proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+    location / {
+        proxy_pass      http://127.0.0.1:8083/;
+        proxy_http_version  1.1;
+        proxy_set_header    Host $host;
+        proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header    X-Real-IP $remote_addr;
+    }
+    location /view/ {
+         proxy_buffering         off;            # Chrome
+         proxy_pass              http://127.0.0.1:8083/view/;
+         proxy_http_version      1.1;
+         proxy_set_header        Host $host;
+         proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+         proxy_set_header        X-Real-IP $remote_addr;
+    }
+    location /static/ {
+         proxy_pass              http://127.0.0.1:8083/static/;
+         proxy_http_version      1.1;
+         proxy_set_header        Host $host;
+         proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+         proxy_set_header        X-Real-IP $remote_addr;
+    }
+}

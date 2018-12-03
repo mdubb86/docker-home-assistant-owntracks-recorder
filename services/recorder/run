@@ -1,0 +1,6 @@
+#!/usr/bin/with-contenv /bin/bash
+echo 'Starting owntracks recorder'
+test -f /env && source /env
+test -f /env && export $(cut -d= -f1 /env)
+exec ot-recorder --port --storage /storage --lua-script /hooks.lua
+
